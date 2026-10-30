@@ -1,0 +1,29 @@
+/// Disconnected table behind the km / mi toggle
+table Units
+	lineageTag: a6355483-6605-4659-b6fc-e3e7b8a90565
+
+	column Unit
+		dataType: string
+		lineageTag: 526c634e-1fe7-48b3-95fc-4a16da58bf3d
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Unit]
+		sortByColumn: 'Unit Order'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Unit Order'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: a42bf6fc-e77f-4dd0-96ba-da3d9ae1f007
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Unit Order]
+
+		annotation SummarizationSetBy = User
+
+	partition Units = calculated
+		mode: import
+		source = DATATABLE("Unit", STRING, "Unit Order", INTEGER, {{"km", 1}, {"mi", 2}})
+

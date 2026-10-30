@@ -1,0 +1,336 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.13.0/schema.json",
+  "name": "rcTable",
+  "position": {
+    "x": 40.116392953968,
+    "y": 676.74610722346029,
+    "z": 30,
+    "height": 362.79172758371067,
+    "width": 910.46770095527381,
+    "tabOrder": 30
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Races"
+                    }
+                  },
+                  "Property": "race_date"
+                }
+              },
+              "queryRef": "Races.race_date",
+              "nativeQueryRef": "race_date",
+              "displayName": "Date"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Races"
+                    }
+                  },
+                  "Property": "event_name"
+                }
+              },
+              "queryRef": "Races.event_name",
+              "nativeQueryRef": "event_name",
+              "displayName": "Race"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Races"
+                    }
+                  },
+                  "Property": "distance"
+                }
+              },
+              "queryRef": "Races.distance",
+              "nativeQueryRef": "distance",
+              "displayName": "Distance"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Races"
+                    }
+                  },
+                  "Property": "finish_time"
+                }
+              },
+              "queryRef": "Races.finish_time",
+              "nativeQueryRef": "finish_time",
+              "displayName": "Finish"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Races"
+                    }
+                  },
+                  "Property": "Race Pace"
+                }
+              },
+              "queryRef": "Races.Race Pace",
+              "nativeQueryRef": "Race Pace",
+              "displayName": "Pace"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Races"
+                    }
+                  },
+                  "Property": "age_group"
+                }
+              },
+              "queryRef": "Races.age_group",
+              "nativeQueryRef": "age_group",
+              "displayName": "Division"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Races"
+                    }
+                  },
+                  "Property": "state"
+                }
+              },
+              "queryRef": "Races.state",
+              "nativeQueryRef": "state",
+              "displayName": "State"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Races"
+                    }
+                  },
+                  "Property": "PR"
+                }
+              },
+              "queryRef": "Races.PR",
+              "nativeQueryRef": "PR"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "Races"
+                  }
+                },
+                "Property": "race_date"
+              }
+            },
+            "direction": "Descending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "objects": {
+      "columnWidth": [
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "122.6280170034091D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Races.race_date"
+          }
+        },
+        {
+          "properties": {
+            "value": {
+              "expr": {
+                "Literal": {
+                  "Value": "346.32593202249086D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Races.event_name"
+          }
+        }
+      ],
+      "columnHeaders": [
+        {
+          "properties": {}
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'All races'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "9f9d26e492eb19a536be",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Races"
+              }
+            },
+            "Property": "race_date"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "0986300549e854796655",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Races"
+              }
+            },
+            "Property": "event_name"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "99b268ccf9f2b87fe81b",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Races"
+              }
+            },
+            "Property": "distance"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "69ed2054f7f19ca248e2",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Races"
+              }
+            },
+            "Property": "finish_time"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "d903ba44ddf9283bde22",
+        "field": {
+          "Measure": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Races"
+              }
+            },
+            "Property": "Race Pace"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "8e8006a00235bfe96892",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Races"
+              }
+            },
+            "Property": "age_group"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "23b6f14f7455ead243e6",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Races"
+              }
+            },
+            "Property": "state"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "1f5c40e7945f7cd6ce52",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Races"
+              }
+            },
+            "Property": "PR"
+          }
+        },
+        "type": "Categorical"
+      }
+    ]
+  }
+}

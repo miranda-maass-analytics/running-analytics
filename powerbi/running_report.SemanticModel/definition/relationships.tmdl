@@ -1,0 +1,8 @@
+relationship 7c1e2a90-4b3d-4f6e-9a21-3d5b8e0f1a01
+	fromColumn: Runs.run_date
+	toColumn: Date.Date
+
+relationship 7c1e2a90-4b3d-4f6e-9a21-3d5b8e0f1a02
+	fromColumn: Races.race_date
+	toColumn: Date.Date
+

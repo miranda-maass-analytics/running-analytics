@@ -1,0 +1,308 @@
+table Races
+	lineageTag: 39ffc812-02b1-4e5c-b682-daccbddf304a
+
+	measure 'Races Run' = COUNTROWS(Races)
+		formatString: #,0
+		displayFolder: KPIs
+		lineageTag: 87329fce-dc25-4b93-b3f3-8cdd3d315aaf
+
+	measure 'Best Time (s)' = MIN(Races[finish_time_s])
+		formatString: 0
+		isHidden
+		displayFolder: PRs
+		lineageTag: 077113c1-34c6-40a2-88b0-2d01d92ee23d
+
+	/// Fastest finish in the current filter context, as h:mm:ss
+	measure 'Best Time' =
+			VAR s = [Best Time (s)]
+			VAR h = INT(s / 3600)
+			VAR m = INT(MOD(s, 3600) / 60)
+			VAR sec = MOD(s, 60)
+			RETURN
+			    IF(
+			        ISBLANK(s), BLANK(),
+			        IF(h > 0, h & ":" & FORMAT(m, "00") & ":" & FORMAT(sec, "00"), m & ":" & FORMAT(sec, "00"))
+			    )
+		displayFolder: PRs
+		lineageTag: 4dbeb102-d099-45f6-8f1c-74dbb1ab05e1
+
+	measure '5K PR' = CALCULATE([Best Time], Races[distance] = "5K")
+		displayFolder: PRs
+		lineageTag: 3ed2ffaa-b9a1-40af-a524-edc5b3b11627
+
+	measure '10K PR' = CALCULATE([Best Time], Races[distance] = "10K")
+		displayFolder: PRs
+		lineageTag: a7a2a0a6-941e-45c0-9d21-bae663052137
+
+	measure 'Half Marathon PR' = CALCULATE([Best Time], Races[distance] = "Half Marathon")
+		displayFolder: PRs
+		lineageTag: 69fc3531-11c6-4da0-88d8-0a6f9ee6db95
+
+	measure 'Marathon PR' = CALCULATE([Best Time], Races[distance] = "Marathon")
+		displayFolder: PRs
+		lineageTag: 4d034d18-b5f0-4861-aa32-816f32e35d95
+
+	measure 'Olympic Tri PR' = CALCULATE([Best Time], Races[distance] = "Olympic Triathlon")
+		displayFolder: PRs
+		lineageTag: c313f730-d0d9-41a4-821d-328005b4ca47
+
+	measure '10K Time (min)' = CALCULATE(SUM(Races[finish_time_min]), Races[distance] = "10K")
+		formatString: 0.0
+		displayFolder: Charts
+		lineageTag: 6ca4bfb5-6add-4f73-9477-da93cf27313e
+
+	measure 'Half Marathon Time (min)' = CALCULATE(SUM(Races[finish_time_min]), Races[distance] = "Half Marathon")
+		formatString: 0.0
+		displayFolder: Charts
+		lineageTag: b0e19ef5-0c91-4231-8515-4c993eec27b8
+
+	/// Per-race pace as m:ss in the selected unit (blank for triathlons)
+	measure 'Race Pace' =
+			VAR p = IF([Selected Unit] = "mi", MAX(Races[pace_min_per_mi]), MAX(Races[pace_min_per_km]))
+			VAR t = ROUND(p * 60, 0)
+			RETURN
+			    IF(ISBLANK(p), BLANK(), INT(t / 60) & ":" & FORMAT(MOD(t, 60), "00") & " /" & [Selected Unit])
+		displayFolder: Charts
+		lineageTag: 2e4c0f8e-8659-491f-b58c-ecb18231b085
+
+	measure 'Map Latitude' = AVERAGE(Races[latitude])
+		displayFolder: Map
+		lineageTag: 3571fe64-9974-4969-85c1-8f813f603862
+
+	measure 'Map Longitude' = AVERAGE(Races[longitude])
+		displayFolder: Map
+		lineageTag: c4353dbc-ccc1-4a86-9295-10fa33fd8217
+
+	column race_date
+		dataType: dateTime
+		formatString: mmm d, yyyy
+		lineageTag: 6d3b61e2-98ab-489e-88d2-82dbe2500032
+		summarizeBy: none
+		sourceColumn: race_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column event_name
+		dataType: string
+		lineageTag: 1a107c11-6aed-42f4-966e-234311e1bb05
+		summarizeBy: none
+		sourceColumn: event_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column race_name
+		dataType: string
+		lineageTag: f8ac3249-c365-455e-8c90-72168d28589a
+		summarizeBy: none
+		sourceColumn: race_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column sport
+		dataType: string
+		lineageTag: 0051e390-63a1-417c-ab66-143b62b814d0
+		summarizeBy: none
+		sourceColumn: sport
+
+		annotation SummarizationSetBy = Automatic
+
+	column distance
+		dataType: string
+		lineageTag: e2d896f0-3cfc-49e5-9b92-3705c48ad134
+		summarizeBy: none
+		sourceColumn: distance
+		sortByColumn: distance_sort
+
+		annotation SummarizationSetBy = Automatic
+
+	column distance_sort
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 1f226a24-1a57-43d6-b4b2-6a6047fb1371
+		summarizeBy: none
+		sourceColumn: distance_sort
+
+		annotation SummarizationSetBy = User
+
+	column distance_km
+		dataType: double
+		formatString: 0.00
+		lineageTag: 45653d22-95dc-418c-a8cb-a0c883d2704f
+		summarizeBy: sum
+		sourceColumn: distance_km
+
+		annotation SummarizationSetBy = Automatic
+
+	column distance_mi
+		dataType: double
+		formatString: 0.00
+		lineageTag: 36a0f578-9762-4560-858f-29f683f545db
+		summarizeBy: sum
+		sourceColumn: distance_mi
+
+		annotation SummarizationSetBy = Automatic
+
+	column state
+		dataType: string
+		lineageTag: 9801e51f-9409-4f31-8360-93453fdc04ca
+		dataCategory: StateOrProvince
+		summarizeBy: none
+		sourceColumn: state
+
+		annotation SummarizationSetBy = Automatic
+
+	column age_group
+		dataType: string
+		lineageTag: 7dd181a6-3f0e-4ab1-82e9-7ac3bc9e7979
+		summarizeBy: none
+		sourceColumn: age_group
+
+		annotation SummarizationSetBy = Automatic
+
+	column finish_time_s
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: f5ea4fc6-7f2d-484c-be55-118b57729ce0
+		summarizeBy: none
+		sourceColumn: finish_time_s
+
+		annotation SummarizationSetBy = User
+
+	column finish_time_min
+		dataType: double
+		formatString: 0.0
+		lineageTag: cf0df340-609d-4788-afdf-d3f7d0847fcc
+		summarizeBy: sum
+		sourceColumn: finish_time_min
+
+		annotation SummarizationSetBy = Automatic
+
+	column finish_time
+		dataType: string
+		lineageTag: bbcc5c28-d1f3-4b8a-8bfe-2d9b254a5c83
+		summarizeBy: none
+		sourceColumn: finish_time
+
+		annotation SummarizationSetBy = Automatic
+
+	column pace_min_per_km
+		dataType: double
+		formatString: 0.00
+		lineageTag: a3949db7-fa2a-4d35-8f4c-c2fc30900ce6
+		summarizeBy: none
+		sourceColumn: pace_min_per_km
+
+		annotation SummarizationSetBy = User
+
+	column pace_min_per_mi
+		dataType: double
+		formatString: 0.00
+		lineageTag: 495718b5-82cc-412b-90a9-1a6e0b0b7da2
+		summarizeBy: none
+		sourceColumn: pace_min_per_mi
+
+		annotation SummarizationSetBy = User
+
+	column was_pr_at_time
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: b113a2bd-5684-45fd-a6f9-840bccdfc92d
+		summarizeBy: none
+		sourceColumn: was_pr_at_time
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_current_pr
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: d2d762a2-25c5-4c8e-89b8-2428821b50a6
+		summarizeBy: none
+		sourceColumn: is_current_pr
+
+		annotation SummarizationSetBy = Automatic
+
+	column strava_activity_id
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: dddce6db-3491-4bde-a040-09550c5181cd
+		summarizeBy: none
+		sourceColumn: strava_activity_id
+
+		annotation SummarizationSetBy = User
+
+	column strava_distance_km
+		dataType: double
+		formatString: 0.00
+		lineageTag: 196139af-232c-4a5e-840c-fd077da81f7b
+		summarizeBy: none
+		sourceColumn: strava_distance_km
+
+		annotation SummarizationSetBy = User
+
+	/// Pace as m:ss text (blank for triathlons)
+	column 'Pace /km' =
+			VAR p = Races[pace_min_per_km]
+			VAR t = ROUND(p * 60, 0)
+			RETURN
+			    IF(ISBLANK(p), BLANK(), INT(t / 60) & ":" & FORMAT(MOD(t, 60), "00"))
+		dataType: string
+		lineageTag: aefd4724-617b-46f5-bcc1-6cc4b39b109a
+		summarizeBy: none
+
+	column PR = IF(Races[is_current_pr], "PR", BLANK())
+		dataType: string
+		lineageTag: 2be8d523-324b-4980-8b2f-01ac04c90596
+		summarizeBy: none
+
+	column city
+		dataType: string
+		lineageTag: 6f243453-1482-438e-8235-089d561611a4
+		dataCategory: Place
+		summarizeBy: none
+		sourceColumn: city
+
+		annotation SummarizationSetBy = Automatic
+
+	column latitude
+		dataType: double
+		lineageTag: 9ac57040-fbf5-495b-8dca-1d7ea6be57a6
+		dataCategory: Latitude
+		summarizeBy: average
+		sourceColumn: latitude
+
+		annotation SummarizationSetBy = User
+
+	column longitude
+		dataType: double
+		lineageTag: aa1f7340-3a25-4573-9c87-2f79902a8e7a
+		dataCategory: Longitude
+		summarizeBy: average
+		sourceColumn: longitude
+
+		annotation SummarizationSetBy = User
+
+	/// gps = Strava/Garmin start point, city = approximate city centre, state = state centre
+	column coords_source
+		dataType: string
+		lineageTag: b8f2e62f-79c8-4fcc-b82c-7017bdb31298
+		summarizeBy: none
+		sourceColumn: coords_source
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Races = m
+		mode: import
+		source =
+				let
+				  Source = PostgreSQL.Database("localhost", "running"),
+				  #"Navigation 1" = Source{[Schema = "races", Item = "v_race_results"]}[Data]
+				in
+				  #"Navigation 1"
+
+	annotation PBI_ResultType = Table
+

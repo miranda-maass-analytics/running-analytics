@@ -1,0 +1,14 @@
+race_date,event_name,race_name,distance,state,official_time,age_group,city,latitude,longitude,coords_source
+2019-05-04,KC Corporate Challenge 5K,Kansas City Corporate Challenge,5K,KS,37:12,F25,"Kansas City, KS",39.1142,-94.6275,city
+2021-06-04,Grand Teton Half Marathon,Grand Teton Half Marathons & 5Ks,Half Marathon,WY,2:20:35,F,"Jackson, WY",43.4799,-110.7624,city
+2022-10-16,Mount Desert Island Half Marathon,Mount Desert Island Marathon,Half Marathon,ME,2:32:33,F28,"Bar Harbor, ME",44.3876,-68.2039,city
+2023-03-04,Leprechaun Chase 10K,Leprechaun Chase,10K,NE,1:01:38,F28,"Cass County, NE",41.0185,-96.3207,gps
+2023-06-06,Cornfield Cornfield,Cornfield Cornfield,10K,NE,1:06:53,F28,"Sarpy County, NE",41.1529,-96.1077,gps
+2023-09-24,Heartland Marathon,The Heartland Marathon,Marathon,NE,5:56:03,F29,"Omaha, NE",41.2697,-95.9214,gps
+2024-03-02,Leprechaun Chase 10K,Leprechaun Chase 10K,10K,NE,1:03:11,F29,"Cass County, NE",41.0185,-96.3207,gps
+2024-06-08,Cornfield Cornfield,Cornfield Cornfield,10K,NE,1:02:54,F29,"Sarpy County, NE",41.1529,-96.1077,gps
+2024-06-10,Pacific Crest Olympic Triathlon,Pacific Crest Endurance Sports Festival,Olympic Triathlon,OR,3:36:38,F30,"Sunriver, OR",43.8840,-121.4386,city
+2025-06-21,Wisconsin Triterium Olympic Triathlon,Wisconsin Triterium Triathlon,Olympic Triathlon,WI,4:30:07,F31,Wisconsin,44.6243,-89.9941,state
+2025-10-26,Hot Cider Hustle Half Marathon,Hot Cider Hustle Omaha,Half Marathon,NE,2:34:16,F31,"Omaha, NE",41.2308,-96.1561,gps
+2026-03-07,Leprechaun Chase 10K,Leprechaun Chase,10K,NE,1:02:43,F31,"Cass County, NE",41.0184,-96.3211,gps
+2026-05-03,Lincoln Half Marathon,Lincoln Marathon & Half Marathon,Half Marathon,NE,2:18:46,F31,"Lincoln, NE",40.8212,-96.7013,gps

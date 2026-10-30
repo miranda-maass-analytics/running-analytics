@@ -1,0 +1,13 @@
+.env
+# Garmin account export: personal/health data, keep out of the repo
+data/garmin_data/
+data/garmin_data.zip
+.venv/
+__pycache__/
+*.pbix.bak
+# Power BI project: local settings and the imported-data cache
+**/.pbi/localSettings.json
+**/.pbi/cache.abf
+# Editor settings and a stray empty file
+.vscode/
+/=

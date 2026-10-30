@@ -1,0 +1,303 @@
+table Runs
+	lineageTag: 5fbb3860-eff8-4098-bcfc-21175c6fa30f
+
+	measure Distance = IF([Selected Unit] = "mi", SUM(Runs[distance_mi]), SUM(Runs[distance_km]))
+		displayFolder: KPIs
+		lineageTag: fee36804-7595-46f8-b56c-f83368d1c283
+
+		formatStringDefinition = IF([Selected Unit] = "mi", "#,0 ""mi""", "#,0 ""km""")
+
+	measure 'Total Runs' = COUNTROWS(Runs)
+		formatString: #,0
+		displayFolder: KPIs
+		lineageTag: 0cc2cb51-ae0e-4409-99eb-bc5c27deab42
+
+	measure Hours = DIVIDE(SUM(Runs[moving_time_min]), 60)
+		formatString: #,0
+		displayFolder: KPIs
+		lineageTag: b0933da8-684e-4649-8790-9c6c50c098ed
+
+	measure 'Longest Run' = IF([Selected Unit] = "mi", MAX(Runs[distance_mi]), MAX(Runs[distance_km]))
+		displayFolder: KPIs
+		lineageTag: 63ff7b88-c7e0-4e2e-86e0-a1e62b59dc3a
+
+		formatStringDefinition = IF([Selected Unit] = "mi", "#,0.0 ""mi""", "#,0.0 ""km""")
+
+	/// Minutes per km or per mile. Distance-weighted: total moving time / total distance
+	measure Pace =
+			DIVIDE(
+			    SUM(Runs[moving_time_min]),
+			    IF([Selected Unit] = "mi", SUM(Runs[distance_mi]), SUM(Runs[distance_km]))
+			)
+		formatString: 0.00
+		displayFolder: Pace
+		lineageTag: 09ec4269-75d8-46b2-8ef4-74a60b2fbbd6
+
+	/// Pace as m:ss text, for cards and tooltips
+	measure 'Avg Pace' =
+			VAR p = [Pace]
+			VAR t = ROUND(p * 60, 0)
+			RETURN
+			    IF(ISBLANK(p), BLANK(), INT(t / 60) & ":" & FORMAT(MOD(t, 60), "00") & " /" & [Selected Unit])
+		displayFolder: Pace
+		lineageTag: ed88caaf-aa52-49b7-8cda-541a2a425da2
+
+	/// "km" or "mi" from the Units slicer; km when nothing is selected
+	measure 'Selected Unit' = SELECTEDVALUE(Units[Unit], "km")
+		isHidden
+		displayFolder: Units
+		lineageTag: 67a7d473-8c94-43a8-aeba-4a56d00d8965
+
+	measure 'Subtitle Monthly' = [Selected Unit] & " per month"
+		isHidden
+		displayFolder: Units
+		lineageTag: eb86a1b2-47b9-4c10-a382-592dea607ec7
+
+	measure 'Subtitle Pace' = "min per " & [Selected Unit] & "  ·  lower is faster"
+		isHidden
+		displayFolder: Units
+		lineageTag: 73dda344-9706-4c65-b26f-07db9159db86
+
+	measure 'Subtitle Yearly' = [Selected Unit]
+		isHidden
+		displayFolder: Units
+		lineageTag: 56fed7c1-0fe6-449b-83cb-ef75482665b7
+
+	column activity_id
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 14817168-56c7-4d37-86b5-12cb460f90bd
+		summarizeBy: none
+		sourceColumn: activity_id
+
+		annotation SummarizationSetBy = User
+
+	column name
+		dataType: string
+		lineageTag: ff74b5ac-237c-463e-8229-fe902b83b1fa
+		summarizeBy: none
+		sourceColumn: name
+
+		annotation SummarizationSetBy = Automatic
+
+	column sport_type
+		dataType: string
+		lineageTag: d02add0c-a979-4c69-8996-4bca9030e10c
+		summarizeBy: none
+		sourceColumn: sport_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column run_type
+		dataType: string
+		lineageTag: 18d765f7-3e81-4fca-8811-9bafc9c309d4
+		summarizeBy: none
+		sourceColumn: run_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column start_date_local
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 45c8bc06-b945-414d-aff1-3f773174c15f
+		summarizeBy: none
+		sourceColumn: start_date_local
+
+		annotation SummarizationSetBy = Automatic
+
+	column run_date
+		dataType: dateTime
+		formatString: mmm d, yyyy
+		lineageTag: bdf16e54-7c43-416d-ba9a-ed94a991ebbb
+		summarizeBy: none
+		sourceColumn: run_date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column distance_km
+		dataType: double
+		formatString: 0.00
+		lineageTag: caff919a-194b-41f7-b10e-9cdb8b228eb6
+		summarizeBy: sum
+		sourceColumn: distance_km
+
+		annotation SummarizationSetBy = Automatic
+
+	column distance_mi
+		dataType: double
+		formatString: 0.00
+		lineageTag: 236a92e4-2bf4-4f47-8ca0-b872bcddb1d1
+		summarizeBy: sum
+		sourceColumn: distance_mi
+
+		annotation SummarizationSetBy = Automatic
+
+	column moving_time_min
+		dataType: double
+		lineageTag: 8ac4da24-0e10-4b7e-b4b7-8326a1a3a9f4
+		summarizeBy: sum
+		sourceColumn: moving_time_min
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column elapsed_time_min
+		dataType: double
+		lineageTag: 755b73c4-5709-4146-a6ca-48d6a814bd72
+		summarizeBy: sum
+		sourceColumn: elapsed_time_min
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column pace_min_per_km
+		dataType: double
+		formatString: 0.00
+		lineageTag: 758b575c-8d36-4e60-8155-3cd682586594
+		summarizeBy: none
+		sourceColumn: pace_min_per_km
+
+		annotation SummarizationSetBy = User
+
+	column pace_min_per_mi
+		dataType: double
+		formatString: 0.00
+		lineageTag: f9080624-55d6-4e25-baf1-1a93244f4b29
+		summarizeBy: none
+		sourceColumn: pace_min_per_mi
+
+		annotation SummarizationSetBy = User
+
+	column total_elevation_gain_m
+		dataType: double
+		lineageTag: 80e75205-371e-4fec-9014-876c79b03412
+		summarizeBy: sum
+		sourceColumn: total_elevation_gain_m
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column total_elevation_gain_ft
+		dataType: double
+		lineageTag: 6b451c77-f5a0-43d1-8e46-29b3d9b836b0
+		summarizeBy: sum
+		sourceColumn: total_elevation_gain_ft
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column average_heartrate
+		dataType: double
+		lineageTag: 6125d288-6a76-4489-8c6e-57ebf7ea7e42
+		summarizeBy: average
+		sourceColumn: average_heartrate
+
+		annotation SummarizationSetBy = User
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column max_heartrate
+		dataType: double
+		lineageTag: 779e4d23-b52b-4bbc-9cb1-b90e51ea148a
+		summarizeBy: max
+		sourceColumn: max_heartrate
+
+		annotation SummarizationSetBy = User
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column cadence_spm
+		dataType: double
+		lineageTag: 9f6a310b-6162-441e-b9c8-454d8cfc8b26
+		summarizeBy: average
+		sourceColumn: cadence_spm
+
+		annotation SummarizationSetBy = User
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column kudos_count
+		dataType: int64
+		formatString: 0
+		lineageTag: 2a0ed25d-58fc-4fa9-8df8-70d2a0ead548
+		summarizeBy: sum
+		sourceColumn: kudos_count
+
+		annotation SummarizationSetBy = Automatic
+
+	column pr_count
+		dataType: int64
+		formatString: 0
+		lineageTag: e709f847-5348-4cc9-8eba-c07f101c879e
+		summarizeBy: sum
+		sourceColumn: pr_count
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_treadmill
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 581b0bbf-dbb3-4447-88b3-14bf5f0e7fe8
+		summarizeBy: none
+		sourceColumn: is_treadmill
+
+		annotation SummarizationSetBy = Automatic
+
+	column gear_id
+		dataType: string
+		isHidden
+		lineageTag: 6319b96d-6f36-4bee-91cb-bfa6f2be6a39
+		summarizeBy: none
+		sourceColumn: gear_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column start_lat
+		dataType: double
+		lineageTag: 716f01dc-3dbe-45d6-bfae-24824a252a9d
+		dataCategory: Latitude
+		summarizeBy: none
+		sourceColumn: start_lat
+
+		annotation SummarizationSetBy = User
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column start_lng
+		dataType: double
+		lineageTag: e9b07802-cd00-467d-986f-9e444227e961
+		dataCategory: Longitude
+		summarizeBy: none
+		sourceColumn: start_lng
+
+		annotation SummarizationSetBy = User
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	/// Strava or Garmin
+	column source
+		dataType: string
+		lineageTag: 5e3afb6a-727c-43ec-8dc9-6a89fefdb37f
+		summarizeBy: none
+		sourceColumn: source
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Runs = m
+		mode: import
+		source =
+				let
+				  Source = PostgreSQL.Database("localhost", "running"),
+				  #"Navigation 1" = Source{[Schema = "analytics", Item = "v_runs"]}[Data]
+				in
+				  #"Navigation 1"
+
+	annotation PBI_ResultType = Table
+

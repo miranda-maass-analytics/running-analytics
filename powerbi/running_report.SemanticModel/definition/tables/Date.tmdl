@@ -1,0 +1,69 @@
+table Date
+	lineageTag: 48f13914-ee68-4a31-9aa0-11a18a480049
+	dataCategory: Time
+
+	column Date
+		dataType: dateTime
+		isKey
+		formatString: mmm d, yyyy
+		lineageTag: 40f6c854-cf4d-4e05-a734-564c723d7283
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Date]
+
+		annotation SummarizationSetBy = User
+
+	column Year = YEAR([Date])
+		dataType: int64
+		formatString: 0
+		lineageTag: 8290359b-85f5-4631-bd18-a74d8e93f1dc
+		summarizeBy: none
+
+		annotation SummarizationSetBy = User
+
+	column 'Month Num' = MONTH([Date])
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: e737ec1f-2494-404f-b726-f39092f2f43e
+		summarizeBy: none
+
+		annotation SummarizationSetBy = User
+
+	column Month = FORMAT([Date], "mmm")
+		dataType: string
+		lineageTag: 9825c87b-2694-4243-a399-774025b1a411
+		summarizeBy: none
+		sortByColumn: 'Month Num'
+
+		annotation SummarizationSetBy = User
+
+	column 'Month Start' = DATE(YEAR([Date]), MONTH([Date]), 1)
+		dataType: dateTime
+		formatString: mmm yyyy
+		lineageTag: 1267e642-d0a2-49c5-9664-9194472d7875
+		summarizeBy: none
+
+		annotation SummarizationSetBy = User
+
+	column 'Weekday Num' = WEEKDAY([Date], 2)
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 7888d411-8532-4854-942a-6b055719940b
+		summarizeBy: none
+
+		annotation SummarizationSetBy = User
+
+	column Weekday = FORMAT([Date], "ddd")
+		dataType: string
+		lineageTag: e52931a4-3972-42c4-806d-9ea78c2d35e9
+		summarizeBy: none
+		sortByColumn: 'Weekday Num'
+
+		annotation SummarizationSetBy = User
+
+	partition Date = calculated
+		mode: import
+		source = CALENDAR(DATE(2019, 1, 1), DATE(YEAR(TODAY()), 12, 31))
+

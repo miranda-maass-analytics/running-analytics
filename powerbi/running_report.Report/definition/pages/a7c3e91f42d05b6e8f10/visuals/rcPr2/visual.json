@@ -1,0 +1,38 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.8.0/schema.json",
+  "name": "rcPr2",
+  "position": {
+    "x": 784,
+    "y": 136,
+    "z": 12,
+    "height": 140,
+    "width": 352,
+    "tabOrder": 12
+  },
+  "visual": {
+    "visualType": "card",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "Races"
+                    }
+                  },
+                  "Property": "Half Marathon PR"
+                }
+              },
+              "queryRef": "Races.Half Marathon PR",
+              "nativeQueryRef": "Half Marathon PR"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}
