@@ -17,6 +17,7 @@ Race results CSV ---> load_races.py ---> races schema ---+--> races.v_race_resul
 - **Idempotent loads.** Every loader upserts on a natural or source key, so scripts are safe to re-run. The race loader also removes rows that were deleted from the CSV.
 - **Multi-source deduplication.** `analytics.v_runs` combines both sources in one shape. A Garmin run starting within 10 minutes of a Strava activity is treated as a duplicate, and Strava wins.
 - **Source quirks handled at the edge.** Loaders convert Garmin's centimeters and milliseconds to SI units and correct Strava's local timestamps, which carry a misleading `Z` suffix.
+- **Documented corrections.** `analytics.run_corrections` overrides known-bad recordings, such as a marathon that GPS logged as 31.3 miles, without touching source data, so a re-sync can't undo a fix.
 - **Raw data retained.** Typed columns sit alongside the full source record in a `JSONB` column, so nothing is lost if the model needs a new field later.
 - **Race analytics in SQL.** `races.v_race_results` uses window functions to flag personal records, both as of each race and overall, and a lateral join to match each race to its recorded activity.
 - **Power BI as code.** The report is saved in the Power BI Project (`.pbip`) format, so the semantic model and report definitions are readable text that can be version-controlled.
@@ -28,6 +29,7 @@ Race results CSV ---> load_races.py ---> races schema ---+--> races.v_race_resul
 | `strava_sync.py` | Pulls Strava activities into Postgres |
 | `load_garmin.py` | Loads activities from a Garmin Connect export |
 | `load_races.py` | Loads race results from `data/race_results.csv` |
+| `export_site_data.py` | Exports monthly, yearly, and race summaries for the portfolio site's charts |
 | `sql/schema.sql` | Strava tables and the `strava.v_runs` view |
 | `sql/garmin.sql` | Garmin table and the combined `analytics.v_runs` view |
 | `sql/races.sql` | Race tables and the `races.v_race_results` view |

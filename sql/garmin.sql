@@ -28,10 +28,30 @@ CREATE INDEX IF NOT EXISTS garmin_activities_start_idx ON garmin.activities (sta
 
 CREATE SCHEMA IF NOT EXISTS analytics;
 
+-- Known-bad recordings, kept apart from the source tables so a re-sync can't undo them.
+CREATE TABLE IF NOT EXISTS analytics.run_corrections (
+    activity_id  BIGINT PRIMARY KEY,
+    distance_m   NUMERIC(10,1) NOT NULL,
+    reason       TEXT NOT NULL
+);
+
+-- The 2023 Heartland Marathon recorded 31.3 mi; the course is 42.195 km.
+INSERT INTO analytics.run_corrections (activity_id, distance_m, reason)
+SELECT activity_id, 42195.0, 'GPS overstated the distance of the 2023 Heartland Marathon'
+FROM strava.activities
+WHERE start_date_local::date = DATE '2023-09-24'
+  AND sport_type IN ('Run', 'TrailRun', 'VirtualRun')
+ORDER BY distance_m DESC
+LIMIT 1
+ON CONFLICT (activity_id) DO UPDATE SET
+    distance_m = EXCLUDED.distance_m,
+    reason     = EXCLUDED.reason;
+
 -- All runs from both sources, in the shape of strava.v_runs plus `source`.
 -- A Garmin run that starts within 10 minutes of a Strava activity is treated as a
 -- duplicate and dropped, so Strava wins when a run was synced to both.
 CREATE OR REPLACE VIEW analytics.v_runs AS
+WITH runs AS (
 SELECT r.*, 'Strava'::text AS source
 FROM strava.v_runs r
 
@@ -68,4 +88,32 @@ WHERE g.activity_type IN ('running', 'treadmill_running', 'trail_running')
   AND NOT EXISTS (
       SELECT 1 FROM strava.activities s
       WHERE abs(extract(epoch FROM s.start_date - g.start_time_utc)) < 600
-  );
+  )
+)
+SELECT
+    r.activity_id,
+    r.name,
+    r.sport_type,
+    r.run_type,
+    r.start_date_local,
+    r.run_date,
+    COALESCE(ROUND(c.distance_m / 1000.0, 2), r.distance_km)    AS distance_km,
+    COALESCE(ROUND(c.distance_m / 1609.344, 2), r.distance_mi)  AS distance_mi,
+    r.moving_time_min,
+    r.elapsed_time_min,
+    COALESCE(ROUND(r.moving_time_min / NULLIF(c.distance_m / 1000.0, 0), 2), r.pace_min_per_km)   AS pace_min_per_km,
+    COALESCE(ROUND(r.moving_time_min / NULLIF(c.distance_m / 1609.344, 0), 2), r.pace_min_per_mi) AS pace_min_per_mi,
+    r.total_elevation_gain_m,
+    r.total_elevation_gain_ft,
+    r.average_heartrate,
+    r.max_heartrate,
+    r.cadence_spm,
+    r.kudos_count,
+    r.pr_count,
+    r.is_treadmill,
+    r.gear_id,
+    r.start_lat,
+    r.start_lng,
+    r.source
+FROM runs r
+LEFT JOIN analytics.run_corrections c USING (activity_id);
